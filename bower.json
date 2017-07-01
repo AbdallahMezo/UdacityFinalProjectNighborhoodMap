@@ -1,0 +1,12 @@
+{
+  "name": "Nearby Hospitals in Cairo",
+  "description": "Simple Map Application where you can search and find details and a road destination withn the nearest place you are in.",
+  "version": "1.0.0",
+  "author": "Abdallah Ebrahim Abdallah Muhammed",
+  "main": "index.html",
+  "authors": [
+    "Abdallah Ebrahim Abdallah Muhammed"
+  ],
+  "license": "MIT",
+  "homepage": "index.html"
+}

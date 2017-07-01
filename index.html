@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<head>
+    <title>Nearby Hospitals in Cairo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/main.css">
+</head>
+<body lang="en">
+ 
+ <!-- Wrapping all content in a container for responsivness -->
+  <div class="container-fluid">
+     
+     <!-- Title init -->
+      <p id="title">Find The nearest Hopital to you</p>
+      
+      <!-- Map init -->
+      <div class="row">
+          <div class="col-md-12">
+              <div id="map"></div>
+          </div>
+      </div>
+      
+      <!-- search box init -->
+      <div class="row">
+          <div class="col-md-4" class="search">
+              <input type="text" class="search" id="searchBox" placeholder="Search for Hospitals">
+              <ul id="hospitalsList">
+                  <li id="result"></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+    
+    <!-- JS , JQuery and Kockout framework calling -->
+    <script src="bower_components/knockout/dist/knockout.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="assets/script.js"></script>
+    <script async defer src= "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyAIOvWVE52EZr2hu3C_an65N69vSa9Ku4k&callback=initMap" onerror="googleCallBack()"></script>
+</body>
