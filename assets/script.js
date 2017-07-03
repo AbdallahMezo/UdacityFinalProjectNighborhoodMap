@@ -8,12 +8,12 @@ var placeMarkers = [];
 // Declearing map function to draw map on screen
   function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 30.044611, lng: 31.235464},
-          zoom: 12,
+          center: {lat: 30.048448, lng: 31.203926},
+          zoom: 14,
           mapTypeControl: false
         });
       
-      infowindow = new google.maps.InfoWindow();
+      
 
       var locations = [
           {title: 'El Ziraeyeen Hospital', location: {lat: 30.042030, lng: 31.211351},phone:'02 33350899',address:'Zainab Kamel Hasan, Ad Doqi, Giza Governorate'},
@@ -37,24 +37,38 @@ var placeMarkers = [];
       // The following group uses the location array to create an array of markers on initialize.
         for (var i = 0; i < locations.length; i++) {
             
+            
+            
+            
           // Get the position from the location array.
           var position = locations[i].location;
           var title = locations[i].title;
+          var phone = locations[i].phone;
+          var address = locations[i].address;
             
           // Create a marker per location, and put into markers array.
           var marker = new google.maps.Marker({
             position: position,
             title: title,
+            address: address,
+            phone: phone,
             animation: google.maps.Animation.DROP,
           });
             
           // Push the marker to our array of markers.
           markers.push(marker);
+            marker.setMap(map);
+            
             
           // Create an onclick event to open the large infowindow at each marker.
           marker.addListener('click', function() {
-            populateInfoWindow(this, Infowindow);
+            populateInfoWindow(this, infoWindow);
           });
+            
+                
+          
+            
+          
           
         }
   };
@@ -63,7 +77,74 @@ var placeMarkers = [];
       console.log("Error Loading The Map");
   }
 
+      function populateInfoWindow(marker, infoWindow) {
+        var  infoWindow = new google.maps.InfoWindow();
+        // Check to make sure the infowindow is not already opened on this marker.
+          
+        if (infoWindow.marker != marker) {
+          // Clear the infowindow content to give the streetview time to load.
+          infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p>');
+          infoWindow.marker = marker;
+            
+          // Make sure the marker property is cleared if the infowindow is closed.
+          infoWindow.addListener('closeclick', function() {
+            infoWindow.marker = null;
+          });
+            
+            
+            function toggleBounce() {
+                    if (marker.getAnimation() !== null) {
+                      marker.setAnimation(null);
+                    } else {
+                      marker.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(function(){
+                            marker.setAnimation()
+                        },1500);
+                    }
+                  }
+            
+          marker.addListener('click', toggleBounce());
+            
+             
+          // Open the infowindow on the correct marker.
+          infoWindow.open(map, marker);
+        }
+      }
+
+var appViewModel = function() {
+      var self = this;
+      self.markers = ko.observableArray([]);
+      self.locations = ko.observableArray([]);
 
 
+      self.filter = ko.observable("");
+      self.search = ko.observable("");
+      if (!map) {
+          alert("Currently Google Maps is not available !!");
+          return;
+      }
+      self.map = ko.observable(map);
 
- 
+      self.filteredArray = ko.computed(function() {
+          return ko.utils.arrayFilter(self.locations(), function(marker) {
+              if (marker.title.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1) {
+                  if (item.marker)
+                      item.marker.setMap(map);
+              } else {
+                  if (item.marker)
+                      item.marker.setMap(null);
+              }
+              return item.name.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1;
+          });
+      }, self);
+      self.clickHandler = function(data) {
+          centerLocation(data, self.map(), self.markers);
+          var infoWindow = new google.maps.InfoWindow({
+              content: data.marker.content
+          });
+          for (var i = 0; i < self.markers.length; i++) {
+              self.markers[i].infowindow.close();
+          }
+          infoWindow.open(self.map(), marker);
+      };
+  };
