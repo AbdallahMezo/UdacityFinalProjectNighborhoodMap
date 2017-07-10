@@ -16,9 +16,9 @@
       <div id="filteration" class="row">
          <p id="title">Find The nearest Hopital to you</p>
           <div class="col-md-4" class="search">
-              <input type="text" class="search" id="searchBox" data-bind="textInput: filter" placeholder="Search for Hospitals">
-              <ul data-bind="foreach: filteredArray" id="hospitalsList">
-                  <li data-bind="text: name, click: $root.clickHandler"></li>
+              <input type="text" class="search" id="searchBox" placeholder="Search for Hospitals">
+              <ulid="hospitalsList">
+                  <li ></li>
               </ul>
           </div>
       </div>
@@ -29,22 +29,9 @@
           </div>
       </div>
       
-      <!-- search box init -->
       
   </div>
-    <script type="text/script"  id="marker">
-                        <div data-bind="visible: visible">
-                            <a href="#" data-bind="attr: {id: id}">
-                                <li data-bind="click: $parent.itemClicked.bind($data, $index())">
-                                    <strong data-bind="text: title"></strong>
-
-                                    <br>
-
-                                    <p data-bind="text: Address"></p>
-                                </li>
-                            </a>
-                        </div>
-                    </script>
+    
     <!-- JS , JQuery and Kockout framework calling -->
     <script src="bower_components/knockout/dist/knockout.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
