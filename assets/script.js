@@ -203,8 +203,8 @@ var AppViewModel = function () {
         });
     }, self);
 
-    self.clickHandler = function (data) {
-        centerLocation(data, self.map(), self.markers);
+    self.clickHandler = function (locations) {
+        centerLocation(locations, self.map(), self.markers());
         var infoWindow = new google.maps.InfoWindow({
             content: data.marker.content
         });
@@ -218,8 +218,8 @@ var AppViewModel = function () {
         for (var i = 0; i < markers().length; i++) {
             markers()[i].infowindow.close();
         }
-        map.setCenter(new google.maps.LatLng(locations.location[0], locations.location[1]));
-        map.setZoom(12);
+        map.setCenter(new google.maps.LatLng(locations.location.lng, locations.location.lat));
+        map.setZoom(14);
         for (var n = 0; n < markers().length; n++) {
             var content = markers()[n].content.split('<br>');
             if (data.name === content[0]) {
