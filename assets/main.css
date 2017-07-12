@@ -41,3 +41,9 @@ ul{
     cursor: pointer;
     color: #ffffff;
 }
+.col-md-9{
+    padding: 0;
+}
+.container-fluid{
+    padding: 0;
+}

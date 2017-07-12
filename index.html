@@ -10,24 +10,29 @@
  
  <!-- Wrapping all content in a container for responsivness -->
   <div class="container-fluid">
-     
+     <div class="row">
+         <div class="col-md-3">
+             <div id="filteration">
+                 <p id="title">Find The nearest Hopital to you</p>
+                  <div class="search">
+                      <input data-bind="textInput: filter" type="text" class="search"  id="searchBox" placeholder="Search for Hospitals">
+                      <ul data-bind="foreach: filteredArray"  id="hospitalsList">
+                          <li data-bind="text: title, click:$root.clickHandler"></li>
+                      </ul>
+                  </div>
+              </div>
+         </div>
+         <div class="col-md-9">
+              <div id="map"></div>
+         </div>
+     </div>
      <!-- Title init -->
       
-      <div id="filteration" class="row">
-         <p id="title">Find The nearest Hopital to you</p>
-          <div class="search">
-              <input data-bind="textInput: filter" type="text" class="search"  id="searchBox" placeholder="Search for Hospitals">
-              <ul data-bind="foreach: filteredArray"  id="hospitalsList">
-                  <li data-bind="text: title, click:$root.clickHandler"></li>
-              </ul>
-          </div>
-      </div>
+      
       <!-- Map init -->
-      <div class="row">
           <div>
-              <div id="map"></div>
+             
           </div>
-      </div>
       
       
   </div>

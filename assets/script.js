@@ -28,8 +28,8 @@ var locations = [
     {
         title: 'Kids Hospital',
         location: {
-            lat: 30.048293,
-            lng: 30.048293
+            lat: 30.048526,
+            lng: 31.194607
         },
         phone: '02 37495030',
         address: 'Gameat Al Dewal Al Arabeya, Mit Akaba, Al Agouzah, Giza Governorate'
@@ -118,11 +118,13 @@ function initMap() {
         markers.push(marker);
         marker.setMap(map);
 
-
+        
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function () {
             populateInfoWindow(this, infoWindow);
         });
+        
+        appViewModel.locations()[i].marker = marker;
     }
 };
 
@@ -192,9 +194,9 @@ var AppViewModel = function () {
 
     self.clickHandler = function (locations) {
         
-        centerLocation(locations, self.map(), self.markers);
+        centerLocation(locations, map, markers);
         var infoWindow = new google.maps.InfoWindow({
-            content: locations.marker
+            content: locations.marker.content
         });
         for (var i = 0; i < self.markers.length; i++) {
             self.markers[i].infowindow.close();
