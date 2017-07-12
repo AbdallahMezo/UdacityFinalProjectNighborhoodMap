@@ -191,6 +191,7 @@ var AppViewModel = function () {
     }, self);
 
     self.clickHandler = function (locations) {
+        
         centerLocation(locations, self.map(), self.markers);
         var infoWindow = new google.maps.InfoWindow({
             content: locations.marker
@@ -198,7 +199,7 @@ var AppViewModel = function () {
         for (var i = 0; i < self.markers.length; i++) {
             self.markers[i].infowindow.close();
         }
-        infoWindow.open(self.map(), self.marker);
+        infoWindow.open(self.map(), locations.marker);
     };
 
     function centerLocation(locations, markers) {
