@@ -97,15 +97,8 @@ function initMap() {
         mapTypeControl: false
     });
 
-
-
-
     // The following group uses the location array to create an array of markers on initialize.
     for (var i = 0; i < locations.length; i++) {
-
-
-
-
         // Get the position from the location array.
         var position = locations[i].location;
         var title = locations[i].title;
@@ -130,12 +123,6 @@ function initMap() {
         marker.addListener('click', function () {
             populateInfoWindow(this, infoWindow);
         });
-
-
-
-
-
-
     }
 };
 
@@ -204,25 +191,25 @@ var AppViewModel = function () {
     }, self);
 
     self.clickHandler = function (locations) {
-        centerLocation(locations, self.map(), self.markers());
+        centerLocation(locations, self.map(), self.markers);
         var infoWindow = new google.maps.InfoWindow({
-            content: data.marker.content
+            content: locations.marker
         });
         for (var i = 0; i < self.markers.length; i++) {
             self.markers[i].infowindow.close();
         }
-        infoWindow.open(self.map(), marker);
+        infoWindow.open(self.map(), self.marker);
     };
 
-    function centerLocation(locations, map, markers) {
-        for (var i = 0; i < markers().length; i++) {
-            markers()[i].infowindow.close();
+    function centerLocation(locations, markers) {
+        for (var i = 0; i < self.markers.length; i++) {
+            markers[i].infowindow.close();
         }
         map.setCenter(new google.maps.LatLng(locations.location.lng, locations.location.lat));
         map.setZoom(14);
-        for (var n = 0; n < markers().length; n++) {
-            var content = markers()[n].content.split('<br>');
-            if (data.name === content[0]) {
+        for (var n = 0; n < self.markers.length; n++) {
+            var content = markers[n].content.split('<br>');
+            if (locations.title === content[0]) {
                 toggleBounce(markers()[n]);
             }
         }
