@@ -1,9 +1,9 @@
-'use-strict';
 
-// Declearing app var-s
+// Declearing app variables
 var map, infoWindow;
 var markers = [];
 var placeMarkers = [];
+// Creating the locations as a model
 var locations = [
     {
         title: 'El Ziraeyeen Hospital',
@@ -84,10 +84,14 @@ var locations = [
         phone: '02 23634260',
         address: 'abdel aziz Al Saoud st.، MANIAL EL RODA، Al Manial, Cairo Governorate'
     },
-        ];
+];
 
-// Declearing map function to draw map on screen
+
+// Declearing map function to draw map on screen 
+// This part of the code was done by the help of Google Maps API course's material
 function initMap() {
+    
+    // Define the map
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
             lat: 30.048448,
@@ -118,26 +122,27 @@ function initMap() {
         markers.push(marker);
         marker.setMap(map);
 
-        
+
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function () {
             populateInfoWindow(this, infoWindow);
         });
         
+        // Call marker of locations to the appViewModel
         appViewModel.locations()[i].marker = marker;
     }
 };
 
-function googleCallBack() {
-    console.log("Error Loading The Map");
-}
 
+
+// Create the InfoWindow function
 function populateInfoWindow(marker, infoWindow) {
     var infoWindow = new google.maps.InfoWindow();
+    
     // Check to make sure the infowindow is not already opened on this marker.
-
     if (infoWindow.marker != marker) {
-        // Clear the infowindow content to give the streetview time to load.
+        
+        // Create the info window content 
         infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p>');
         infoWindow.marker = marker;
 
@@ -146,7 +151,7 @@ function populateInfoWindow(marker, infoWindow) {
             infoWindow.marker = null;
         });
 
-
+        // Define the Bounce Animation while call the marker
         function toggleBounce() {
             if (marker.getAnimation() !== null) {
                 marker.setAnimation(null);
@@ -157,7 +162,6 @@ function populateInfoWindow(marker, infoWindow) {
                 }, 1500);
             }
         }
-
         marker.addListener('click', toggleBounce());
 
 
@@ -166,60 +170,87 @@ function populateInfoWindow(marker, infoWindow) {
     }
 }
 
+
+// Create the VM of the app 'AppViewModel'
+// This part was done by some help of Karol from Forum and 1:1 Appointment session
+// Also with the help of my mentor Sagar Choudhary through the mentorship support and both should be appreciated , they are great
+// some functions and methods ideas are done through some github and google searches 
+
 var AppViewModel = function () {
+    
+    // Creating the VM variables 
     var self = this;
     self.markers = ko.observableArray([]);
     self.locations = ko.observableArray(locations);
     self.filteredArray = ko.observableArray([]);
     self.search = ko.observable("");
     self.filter = ko.observable("");
-
     self.map = ko.observable(map);
-
     self.filteredArray = ko.computed(function () {
-        return ko.utils.arrayFilter(self.locations(), function (item) { //use it for filter locations using words
-            if (item.title.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1) { //transform all words in name to lower case and check if it in list location or no 
-                if (item.marker) // if this marker is exsit
-                    item.marker.setMap(self.map()); //view it in map
+        
+        // Declearing the filter functions to filter text through words
+        return ko.utils.arrayFilter(self.locations(), function (item) {
+            
+            // Check if search text is exicts or not
+            if (item.title.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1) {
+                
+                // if it exists set the map view to the marker if not remove all markers
+                if (item.marker)
+                    item.marker.setMap(self.map());
             } else {
-                if (item.marker) // if this marker is not exsit
-                    item.marker.setMap(null); //remove all points from map
+                if (item.marker) 
+                    item.marker.setMap(null);
             }
-
-
             return item.title.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1;
-
         });
     }, self);
 
+
+    
+    // Handle the click on the list to trigger the infowindow
     self.clickHandler = function (locations) {
         
-        centerLocation(locations, map, markers);
+        google.maps.event.trigger(locations.marker, 'click');
+        
+        // This commented function took me a long time to be done but Karol is great and helped with just one line of code , but its hard to remove it so i commented it ^_^
+        /*
+        centerLocation(locations, markers);
         var infoWindow = new google.maps.InfoWindow({
-            content: locations.marker.content
+            content: '<p><b>Hospital Name:</b> ' + locations.marker.title + '</p><br>' + '<p><b>Address: </b>' + locations.marker.address + '</p><br>' + '<p><b>Phone: </b>' + locations.marker.phone + '</p>'
         });
         for (var i = 0; i < self.markers.length; i++) {
-            self.markers[i].infowindow.close();
+            self.markers[i].infoWindow.close();
         }
         infoWindow.open(self.map(), locations.marker);
+        */
     };
-
-    function centerLocation(locations, markers) {
+    
+    // This is the declearing of center location to call it in the above function
+    /*
+    function centerLocation(locations) {
         for (var i = 0; i < self.markers.length; i++) {
-            markers[i].infowindow.close();
+            self.markers[i].infoWindow.close();
         }
         map.setCenter(new google.maps.LatLng(locations.location.lng, locations.location.lat));
         map.setZoom(14);
         for (var n = 0; n < self.markers.length; n++) {
             var content = markers[n].content.split('<br>');
-            if (locations.title === content[0]) {
-                toggleBounce(markers()[n]);
+            if (locations.title === locations.title[0]) {
+                toggleBounce(markers[n]);
             }
         }
     }
-
+    */
 };
 
+// Instantiate the ViewModel
 var appViewModel = new AppViewModel();
 
+// Apply the binding
 ko.applyBindings(appViewModel);
+
+
+// Handeling Error if the map didn't loads
+function googleCallBack() {
+    console.log("Error Loading The Map");
+}
