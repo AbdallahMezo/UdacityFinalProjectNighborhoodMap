@@ -1,6 +1,8 @@
 # Nearby Hospitals in Cairo
 
 ## How to run
+You can visit it here : https://abdallahmezo.github.io/UdacityFinalProjectNighborhoodMap/   
+or 
 Clone or download this repo 
 open index.html
 
