@@ -159,7 +159,7 @@ function populateInfoWindow(marker, infoWindow) {
             })
  
         // Create the info window content 
-        infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p> <br>' + '<b><p>Hospital Wiki Articles:</p><br>' + str );
+        infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p> <br>' + '<b><p>Wiki Articles:</p><br>' + str );
         infoWindow.marker = marker;
 
         // Make sure the marker property is cleared if the infowindow is closed.
