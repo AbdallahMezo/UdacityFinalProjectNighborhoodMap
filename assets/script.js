@@ -1,11 +1,9 @@
-
 // Declearing app variables
 var map, infoWindow;
 var markers = [];
 var placeMarkers = [];
 // Creating the locations as a model
-var locations = [
-    {
+var locations = [{
         title: 'El Ziraeyeen Hospital',
         location: {
             lat: 30.042030,
@@ -90,7 +88,7 @@ var locations = [
 // Declearing map function to draw map on screen 
 // This part of the code was done by the help of Google Maps API course's material
 function initMap() {
-    
+
     // Define the map
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
@@ -127,7 +125,7 @@ function initMap() {
         marker.addListener('click', function () {
             populateInfoWindow(this, infoWindow);
         });
-        
+
         // Call marker of locations to the appViewModel
         appViewModel.locations()[i].marker = marker;
     }
@@ -138,51 +136,62 @@ function initMap() {
 // Create the InfoWindow function
 function populateInfoWindow(marker, infoWindow) {
     var infoWindow = new google.maps.InfoWindow();
-    
+
     // Check to make sure the infowindow is not already opened on this marker.
     if (infoWindow.marker != marker) {
         var hospitalName = marker.title;
-        var wikiURL = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + hospitalName + '&format=json&callback=wikiCallback';
+        var wikiURL = 'http://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=' + hospitalName;
         var str = "";
-            $.ajax({
-                url:wikiURL,
-                dataType : "jsonp",
-                success: function( respone ){
-                    var articleList = respone[1];
-                    for ( var i = 0;i < articleList.length; i++){
-                        articleStr = articleList[i];
-                        var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                        str += '<li><a href="' + url + '">' + articleStr + '</a></li>';
-                        return str;
-                    };
+        $.ajax({
+            url: wikiURL,
+            dataType: "jsonp",
+            success: function (response) {
+                console.log(response);
+                var articleList = response[1];
+                var locName = response[0];
+                if (articleList.length > 0) {
+                    for (var article in articleList) {
+                        if (articleList.hasOwnProperty(article)) {
+                            var element = articleList[article];
+                            str = "<li><a href='https://en.wikipedia.org/wiki/" + element + "'>" + element + "</a></li>"
+                        }
+                    }
+                } else {
+                    str = "<li><a href='https://en.wikipedia.org/w/index.php?title=Special:Search&fulltext=1&search=" + locName.replace(' ', '+') + "'>" + locName + "</a></li>"
                 }
-            })
- 
-        // Create the info window content 
-        infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p> <br>' + '<b><p>Wiki Articles:</p><br>' + str );
-        infoWindow.marker = marker;
 
-        // Make sure the marker property is cleared if the infowindow is closed.
-        infoWindow.addListener('closeclick', function () {
-            infoWindow.marker = null;
-        });
+                // Create the info window content 
+                infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p> <br>' + '<b><p>Wiki Articles:</p><br>' + str);
+                infoWindow.marker = marker;
 
-        // Define the Bounce Animation while call the marker
-        function toggleBounce() {
-            if (marker.getAnimation() !== null) {
-                marker.setAnimation(null);
-            } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(function () {
-                    marker.setAnimation()
-                }, 1500);
+                // Make sure the marker property is cleared if the infowindow is closed.
+                infoWindow.addListener('closeclick', function () {
+                    infoWindow.marker = null;
+                });
+
+                // Define the Bounce Animation while call the marker
+                function toggleBounce() {
+                    if (marker.getAnimation() !== null) {
+                        marker.setAnimation(null);
+                    } else {
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(function () {
+                            marker.setAnimation()
+                        }, 1500);
+                    }
+                }
+                marker.addListener('click', toggleBounce());
+
+
+                // Open the infowindow on the correct marker.
+                infoWindow.open(map, marker);
+
+                str = "";
+
             }
-        }
-        marker.addListener('click', toggleBounce());
+        })
 
 
-        // Open the infowindow on the correct marker.
-        infoWindow.open(map, marker);
     }
 }
 
@@ -193,7 +202,7 @@ function populateInfoWindow(marker, infoWindow) {
 // some functions and methods ideas are done through some github and google searches 
 
 var AppViewModel = function () {
-    
+
     // Creating the VM variables 
     var self = this;
     self.markers = ko.observableArray([]);
@@ -203,18 +212,18 @@ var AppViewModel = function () {
     self.filter = ko.observable("");
     self.map = ko.observable(map);
     self.filteredArray = ko.computed(function () {
-        
+
         // Declearing the filter functions to filter text through words
         return ko.utils.arrayFilter(self.locations(), function (item) {
-            
+
             // Check if search text is exicts or not
             if (item.title.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1) {
-                
+
                 // if it exists set the map view to the marker if not remove all markers
                 if (item.marker)
                     item.marker.setMap(map);
             } else {
-                if (item.marker) 
+                if (item.marker)
                     item.marker.setMap(null);
             }
             return item.title.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1;
@@ -222,7 +231,7 @@ var AppViewModel = function () {
     }, self);
 
 
-    
+
     // Handle the click on the list to trigger the infowindow
     self.clickHandler = function (locations) {
         google.maps.event.trigger(locations.marker, 'click');
