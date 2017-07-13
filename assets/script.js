@@ -142,8 +142,24 @@ function populateInfoWindow(marker, infoWindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infoWindow.marker != marker) {
         
+            var hospitalName = marker.title;
+            var wikiResponse = function(respone){
+                var articleList = respone[1];
+                        for ( var i = 0;i < articleList.length; i++){
+                            hospitalName = articleList[i];
+                            var url = 'http://en.wikipedia.org/wiki/' + hospitalName;
+                        };
+                    }
+            var wikiURL = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + hospitalName + '&format=json&callback=wikiCallback';
+                $.ajax({
+                    url:wikiURL,
+                    dataType : "jsonp",
+                    success: wikiResponse
+                });
+        
+        
         // Create the info window content 
-        infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p>');
+        infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p> <br>' + '<b>Hospital Wiki Page: ' + '<a href="' + wikiURL + '">' + hospitalName + '</a>' );
         infoWindow.marker = marker;
 
         // Make sure the marker property is cleared if the infowindow is closed.
@@ -196,7 +212,7 @@ var AppViewModel = function () {
                 
                 // if it exists set the map view to the marker if not remove all markers
                 if (item.marker)
-                    item.marker.setMap(self.map());
+                    item.marker.setMap(map);
             } else {
                 if (item.marker) 
                     item.marker.setMap(null);
@@ -209,38 +225,8 @@ var AppViewModel = function () {
     
     // Handle the click on the list to trigger the infowindow
     self.clickHandler = function (locations) {
-        
         google.maps.event.trigger(locations.marker, 'click');
-        
-        // This commented function took me a long time to be done but Karol is great and helped with just one line of code , but its hard to remove it so i commented it ^_^
-        /*
-        centerLocation(locations, markers);
-        var infoWindow = new google.maps.InfoWindow({
-            content: '<p><b>Hospital Name:</b> ' + locations.marker.title + '</p><br>' + '<p><b>Address: </b>' + locations.marker.address + '</p><br>' + '<p><b>Phone: </b>' + locations.marker.phone + '</p>'
-        });
-        for (var i = 0; i < self.markers.length; i++) {
-            self.markers[i].infoWindow.close();
-        }
-        infoWindow.open(self.map(), locations.marker);
-        */
     };
-    
-    // This is the declearing of center location to call it in the above function
-    /*
-    function centerLocation(locations) {
-        for (var i = 0; i < self.markers.length; i++) {
-            self.markers[i].infoWindow.close();
-        }
-        map.setCenter(new google.maps.LatLng(locations.location.lng, locations.location.lat));
-        map.setZoom(14);
-        for (var n = 0; n < self.markers.length; n++) {
-            var content = markers[n].content.split('<br>');
-            if (locations.title === locations.title[0]) {
-                toggleBounce(markers[n]);
-            }
-        }
-    }
-    */
 };
 
 // Instantiate the ViewModel
@@ -252,5 +238,5 @@ ko.applyBindings(appViewModel);
 
 // Handeling Error if the map didn't loads
 function googleCallBack() {
-    console.log("Error Loading The Map");
+    alert("Error Loading The Map");
 }

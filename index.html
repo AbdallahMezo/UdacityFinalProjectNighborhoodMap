@@ -9,13 +9,13 @@
 <body lang="en">
  
  <!-- Wrapping all content in a container for responsivness -->
-  <div class="container-fluid">
+  <section class="container-fluid">
      <div class="row">
-         <div class="col-md-3">
+         <div class="col-md-3 col-xs-3">
              <div id="filteration">
                  <p id="title">Find The nearest Hopital to you</p>
                   <div class="search">
-                      <input data-bind="textInput: filter" type="text" class="search"  id="searchBox" placeholder="Search for Hospitals">
+                      <input data-bind="textInput: filter" type="text" class="search"  id="search-box" placeholder="Search for Hospitals">
                       <ul data-bind="foreach: filteredArray"  id="hospitalsList">
                           <li data-bind="text: title, click:$root.clickHandler"></li>
                       </ul>
@@ -26,7 +26,7 @@
               <div id="map"></div>
          </div>
      </div>      
-  </div>
+  </section>
     
     <!-- JS , JQuery and Kockout framework calling -->
     <script src="bower_components/knockout/dist/knockout.js"></script>

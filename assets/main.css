@@ -1,14 +1,17 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
-#map{
+
+#map {
     height: 100vh;
     padding: 0;
     margin: 0;
-    overflow: visible; !important;
+    overflow: visible;
+    !important;
 }
-#filteration{
+
+#filteration {
     padding: 15px;
     position: absolute;
     font-size: 18px;
@@ -21,29 +24,51 @@
     height: 100vh;
     color: #fff;
 }
-#title{
+
+#title {
     text-transform: uppercase;
 }
-#searchBox{
+
+#search-box {
     width: 100%;
     font-size: 16px;
     padding: 10px;
     color: #000;
 }
-ul{
+
+ul {
     width: 100%;
     font-size: 16px;
     list-style: none;
     margin-top: 10%;
 }
-#hospitalsList li{
+
+#hospitalsList li {
     margin: 10px 0;
     cursor: pointer;
     color: #ffffff;
 }
-.col-md-9{
+
+.col-md-9 {
     padding: 0;
 }
-.container-fluid{
+
+.container-fluid {
     padding: 0;
+}
+
+
+/* Resizing the screen for responsiveness matters */
+
+@media screen and (max-width: 1024px) and (min-width: 360px) {
+    #title {
+        font-size: 14px;
+    }
+    ul {
+        font-size: 12px;
+    }
+    #search-box {
+        font-size: 12px;
+        padding: 4px;
+    }
 }
