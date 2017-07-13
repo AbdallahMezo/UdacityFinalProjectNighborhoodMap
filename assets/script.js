@@ -4,23 +4,23 @@ var markers = [];
 var placeMarkers = [];
 // Creating the locations as a model
 var locations = [{
-        title: 'El Ziraeyeen Hospital',
+        title: '57357 Hospital',
         location: {
-            lat: 30.042030,
-            lng: 31.211351
+            lat: 30.023140,
+            lng: 31.237813
         },
-        phone: '02 33350899',
-        address: 'Zainab Kamel Hasan, Ad Doqi, Giza Governorate'
+        phone: '02 25351500',
+        address: 'CAIRO, EL SAYEDA ZEINAB، Magra El-Eyoun, Zeinhom, El-Sayeda Zainab, Cairo Governorate'
     },
 
     {
-        title: 'Al Rowad Eyes Hospital',
+        title: 'Coptic Hospital',
         location: {
-            lat: 30.038475,
-            lng: 31.207379
+            lat: 30.063750,
+            lng: 31.252484
         },
-        phone: '02 33361662',
-        address: '29, Iran, Ad Doqi, Giza, Giza Governorate'
+        phone: '02 25899866',
+        address: 'Ramsis st. extension - beside NBE branch - Cairo, Al Fagalah, Al Azbakeyah, Cairo Governorate 11432'
     },
 
     {
@@ -33,54 +33,35 @@ var locations = [{
         address: 'Gameat Al Dewal Al Arabeya, Mit Akaba, Al Agouzah, Giza Governorate'
     },
 
-    {
-        title: 'Safa Hospital - D. Samir Talaat',
-        location: {
-            lat: 30.051497,
-            lng: 31.197481
-        },
-        phone: '02 33361010',
-        address: '40 Iraq, Gazirat Mit Oqbah, Giza, Giza Governorate'
-    },
 
     {
-        title: 'Al Amal Hospital',
+        title: 'Qasr El Eyni Hospital',
         location: {
-            lat: 30.055563,
-            lng: 31.191594
-        },
-        phone: '02 33479212',
-        address: '25 Fawzi Ramah Square, Mit Akaba, Al Omraneyah، Giza Governorate'
-    },
-
-    {
-        title: 'Misr International Hospital',
-        location: {
-            lat: 30.043283,
-            lng: 31.216427
-        },
-        phone: '02 37608261',
-        address: '12 El Saraya St.، Ad Doqi, Giza, Giza Governorate'
-    },
-
-    {
-        title: 'Kasr El Aini Teaching Hospital',
-        location: {
-            lat: 30.031798,
-            lng: 31.228789
+            lat: 30.031939,
+            lng: 31.228970
         },
         phone: '02 23654060',
         address: '27 Nafezet Sheem El Shafaey St.، KASR EL AINY، Al Manial, Cairo Governorate'
     },
 
     {
-        title: 'El Manial Specialized University Hospital',
+        title: 'Nile Badrawi Hospital',
         location: {
-            lat: 30.032197,
-            lng: 31.227212
+            lat: 29.982373,
+            lng: 31.231282
         },
-        phone: '02 23634260',
-        address: 'abdel aziz Al Saoud st.، MANIAL EL RODA، Al Manial, Cairo Governorate'
+        phone: '02 25240022',
+        address: 'Athar an Nabi, Misr Al Qadimah, Cairo Governorate'
+    },
+
+    {
+        title: 'Ain Shams University Specialized Hospital',
+        location: {
+            lat: 30.076611,
+            lng: 31.289920
+        },
+        phone: '0115 350 3322',
+        address: 'El-Khalifa El-Maamoun, El-Qobba Bridge, Al Waili, Cairo Governorate'
     },
 ];
 
@@ -92,10 +73,10 @@ function initMap() {
     // Define the map
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 30.048448,
-            lng: 31.203926
+            lat: 30.028803,
+            lng: 31.219015
         },
-        zoom: 14,
+        zoom: 12,
         mapTypeControl: false
     });
 
@@ -129,13 +110,14 @@ function initMap() {
         // Call marker of locations to the appViewModel
         appViewModel.locations()[i].marker = marker;
     }
+    var infoWindow = new google.maps.InfoWindow();
 };
 
 
 
 // Create the InfoWindow function
 function populateInfoWindow(marker, infoWindow) {
-    var infoWindow = new google.maps.InfoWindow();
+
 
     // Check to make sure the infowindow is not already opened on this marker.
     if (infoWindow.marker != marker) {
@@ -182,16 +164,13 @@ function populateInfoWindow(marker, infoWindow) {
                 }
                 marker.addListener('click', toggleBounce());
 
-
                 // Open the infowindow on the correct marker.
                 infoWindow.open(map, marker);
-
                 str = "";
-
             }
-        })
-
-
+        }).fail(function (jqXHR, textStatus) {
+                    alert("There is an Error loading Wikipedia API");
+                    });
     }
 }
 
@@ -208,9 +187,8 @@ var AppViewModel = function () {
     self.markers = ko.observableArray([]);
     self.locations = ko.observableArray(locations);
     self.filteredArray = ko.observableArray([]);
-    self.search = ko.observable("");
     self.filter = ko.observable("");
-    self.map = ko.observable(map);
+    self.map = map;
     self.filteredArray = ko.computed(function () {
 
         // Declearing the filter functions to filter text through words
@@ -221,10 +199,10 @@ var AppViewModel = function () {
 
                 // if it exists set the map view to the marker if not remove all markers
                 if (item.marker)
-                    item.marker.setMap(map);
+                    item.marker.setVisible(true);
             } else {
                 if (item.marker)
-                    item.marker.setMap(null);
+                    item.marker.setVisible(false);
             }
             return item.title.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1;
         });
