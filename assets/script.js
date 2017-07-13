@@ -141,25 +141,25 @@ function populateInfoWindow(marker, infoWindow) {
     
     // Check to make sure the infowindow is not already opened on this marker.
     if (infoWindow.marker != marker) {
-        
-            var hospitalName = marker.title;
-            var wikiResponse = function(respone){
-                var articleList = respone[1];
-                        for ( var i = 0;i < articleList.length; i++){
-                            hospitalName = articleList[i];
-                            var url = 'http://en.wikipedia.org/wiki/' + hospitalName;
-                        };
-                    }
-            var wikiURL = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + hospitalName + '&format=json&callback=wikiCallback';
-                $.ajax({
-                    url:wikiURL,
-                    dataType : "jsonp",
-                    success: wikiResponse
-                });
-        
-        
+        var hospitalName = marker.title;
+        var wikiURL = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + hospitalName + '&format=json&callback=wikiCallback';
+        var str = "";
+            $.ajax({
+                url:wikiURL,
+                dataType : "jsonp",
+                success: function( respone ){
+                    var articleList = respone[1];
+                    for ( var i = 0;i < articleList.length; i++){
+                        articleStr = articleList[i];
+                        var url = 'http://en.wikipedia.org/wiki/' + articleStr;
+                        str += '<li><a href="' + url + '">' + articleStr + '</a></li>';
+                        return str;
+                    };
+                }
+            })
+ 
         // Create the info window content 
-        infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p> <br>' + '<b>Hospital Wiki Page: ' + '<a href="' + wikiURL + '">' + hospitalName + '</a>' );
+        infoWindow.setContent('<p><b>Hospital Name:</b> ' + marker.title + '</p><br>' + '<p><b>Address: </b>' + marker.address + '</p><br>' + '<p><b>Phone: </b>' + marker.phone + '</p> <br>' + '<b><p>Hospital Wiki Articles:</p><br>' + str );
         infoWindow.marker = marker;
 
         // Make sure the marker property is cleared if the infowindow is closed.
