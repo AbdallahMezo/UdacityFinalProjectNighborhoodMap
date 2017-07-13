@@ -122,7 +122,7 @@ function populateInfoWindow(marker, infoWindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infoWindow.marker != marker) {
         var hospitalName = marker.title;
-        var wikiURL = 'http://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=' + hospitalName;
+        var wikiURL = 'https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=' + hospitalName;
         var str = "";
         $.ajax({
             url: wikiURL,
